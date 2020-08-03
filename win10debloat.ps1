@@ -1,40 +1,64 @@
 ##########
-# Tweaked Win10 Initial Setup Script
+# Windows 10 Initial Setup Script
 # Primary Author: Disassembler <disassembler@dasm.cz>
 # Primary Author Source: https://github.com/Disassembler0/Win10-Initial-Setup-Script
 # Tweaked Source: https://gist.github.com/alirobe/7f3b34ad89a159e6daa1/
-#
-#    If you're a power user looking to tweak your machinea, or doing larger roll-out.. 
-#    Use the @Disassembler0 script instead. It'll probably be more up-to-date than mine:
-#    https://github.com/Disassembler0/Win10-Initial-Setup-Script
 # 
-#    Note from author: Never run scripts without reading them & understanding what they do.
+#    Note: Never run scripts without reading them & understanding what they do.
 #
-#	Addition: One command to rule them all, One command to find it, and One command to Run it! 
-#
-#     > powershell -nop -c "iex(New-Object Net.WebClient).DownloadString('https://git.io/JJ8R4')"
-#
-#	Chris Titus Additions:
-#
+#	Additions:
 #	- Dark Mode
 #	- One Command to launch and run
 #	- Chocolatey Install
 #	- O&O Shutup10 CFG and Run
 #	- Added Install Programs
 #	- Added Debloat Microsoft Store Apps
-#
+#   - Added Office
 ##########
 # Default preset
 $tweaks = @(
 	### Require administrator privileges ###
 	"RequireAdmin",
 
-	### External Program Setup
-	"InstallTitusProgs", #REQUIRED FOR OTHER PROGRAM INSTALLS!
-	"InstallAdobe",
-	"Install7Zip",
-	"InstallNotepadplusplus",
-	"InstallMediaPlayerClassic",
+	### External Program Setup #### 
+	### Un-Comment the apps to install them ####
+	"InstallAdditionalProgs", #REQUIRED FOR OTHER PROGRAM INSTALLS!
+	#"Installchocolateygui", #BETTER WAY TO INSTALL, UPDATE APPS!!
+    "Install7Zip",
+	#"InstallAnydesk",
+	#"InstallAtomCodeEditor",
+    "InstallBackupandSync",
+    #"InstallDiscord",
+    #"InstallEverythingSearch",
+    #"InstallFigma",
+    #"InstallGit",
+	#"InstallGithub",
+	"InstallImageglass",  ##A better alternative to Stock Photo Viewer
+	#"InstallLibreOffice",
+    #"InstallMediaPlayerClassic",
+    "InstallMicrosoftOffice",
+    #"InstallNotepadplusplus",
+	#"InstallOBS",
+	#"InstallPowerToys",
+	#"InstallSlack",
+	"InstallSpotify",
+    #"InstallSteam",
+    "InstallTelegram",
+    "InstallVLCPlayer",
+    "InstallVSCode",
+	#"InstallWhatsapp"
+	#"InstallWinRAR"
+	"InstallZoom",
+    #"InstallBrave",
+    #"InstallChrome",
+    "InstallChromium",
+    #"InstallFirefox",
+    #"InstallnewEdge",
+    #"InstallVivaldi",
+	
+	####
+	#Apps End 
+	####
 
 	### Windows Apps
 	"DebloatAll",
@@ -109,10 +133,10 @@ $tweaks = @(
 	"ShowTaskManagerDetails"        # "HideTaskManagerDetails",
 	"ShowFileOperationsDetails",    # "HideFileOperationsDetails",
 	"DisableFileDeleteConfirm",	# "EnableFileDeleteConfirm",    
-	#"HideTaskbarSearch",
+	"HideTaskbarSearch",
 	"ShowTaskbarSearchIcon",      # "ShowTaskbarSearchBox",
 	"HideTaskView",                 # "ShowTaskView",
-	# "ShowSmallTaskbarIcons",        # "ShowLargeTaskbarIcons",
+	"ShowSmallTaskbarIcons",        # "ShowLargeTaskbarIcons",
 	# "SetTaskbarCombineWhenFull",    # "SetTaskbarCombineNever",     # "SetTaskbarCombineAlways",
 	# "HideTaskbarPeopleIcon",        # "ShowTaskbarPeopleIcon",
 	"ShowTrayIcons",                # "HideTrayIcons",
@@ -129,7 +153,7 @@ $tweaks = @(
 	"ShowKnownExtensions",          # "HideKnownExtensions",
 	# "ShowHiddenFiles",              # "HideHiddenFiles",
 	"HideSyncNotifications"         # "ShowSyncNotifications",
-	# "HideRecentShortcuts",          # "ShowRecentShortcuts",
+	"HideRecentShortcuts",          # "ShowRecentShortcuts",
 	"SetExplorerThisPC",            # "SetExplorerQuickAccess",
 	"HideThisPCFromDesktop",	# "ShowThisPCOnDesktop",
 	# "ShowUserFolderOnDesktop",    # "HideUserFolderFromDesktop",
@@ -158,10 +182,10 @@ $tweaks = @(
 	# "UninstallWindowsStore",      # "InstallWindowsStore",
 	# "DisableXboxFeatures",          # "EnableXboxFeatures",
 	"DisableAdobeFlash",            # "EnableAdobeFlash",
-	"InstallMediaPlayer", 		# "UninstallMediaPlayer",
+	#"InstallMediaPlayer", 		# "UninstallMediaPlayer",
 	"UninstallInternetExplorer",  # "InstallInternetExplorer",
 	"UninstallWorkFolders",       # "InstallWorkFolders",
-	"InstallLinuxSubsystem",      # "UninstallLinuxSubsystem",
+	#"InstallLinuxSubsystem",      # "UninstallLinuxSubsystem",
 	# "InstallHyperV",              # "UninstallHyperV",
 	"SetPhotoViewerAssociation",    # "UnsetPhotoViewerAssociation",
 	"AddPhotoViewerOpenWith",       # "RemovePhotoViewerOpenWith",
@@ -186,29 +210,55 @@ $tweaks = @(
 	"Restart"
 )
 
+####################################################
+#Configuration ends here
+####################################################
+
+
+##########
+#Checks 
+##########
+switch ([Environment]::Is64BitOperatingSystem)
+{
+	$false
+	{
+			Write-Warning -Message "The script supports Windows 10 x64 only"
+	}
+	Default {}
+}
+
+switch ([IntPtr]::Size -eq 8)
+{
+	$false
+	{
+			Write-Warning -Message "The script supports PowerShell x64 only"
+	}
+	Default {}
+}
+
+if ($psISE)
+{
+		Write-Warning -Message "The script can not be run via PowerShell ISE"
+}
+
 #########
-# Recommended Titus Programs
+# Recommended Additional Programs
 #########
 
-Function InstallTitusProgs {
+Function InstallAdditionalProgs {
 	Write-Output "Installing Chocolatey"
 	Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 	choco install chocolatey-core.extension -y
 	Write-Output "Running O&O Shutup with Recommended Settings"
 	Import-Module BitsTransfer
-	Start-BitsTransfer -Source "https://raw.githubusercontent.com/ChrisTitusTech/win10script/master/ooshutup10.cfg" -Destination ooshutup10.cfg
+	Start-BitsTransfer -Source "https://raw.githubusercontent.com/imabhaysutar/win10script/master/ooshutup10.cfg" -Destination ooshutup10.cfg
 	Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
 	./OOSU10.exe ooshutup10.cfg /quiet
 }
 
-Function InstallAdobe {
-	Write-Output "Installing Adobe Acrobat Reader"
-	choco install adobereader -y
-}
-
-Function InstallJava {
-	Write-Output "Installing Java"
-	choco install jre8 -y
+Function Installchocolateygui {
+	Write-Output "Installing ChocoGUI"
+	choco install chocolateygui -y
 }
 
 Function Install7Zip {
@@ -216,15 +266,158 @@ Function Install7Zip {
 	choco install 7zip -y
 }
 
-Function InstallNotepadplusplus {
-	Write-Output "Installing Notepad++"
-	choco install notepadplusplus -y
+Function InstallAnydesk {
+    Write-Output "Installing AnyDesk"
+    choco install anydesk -y
+}
+
+Function InstallAtomCodeEditor {
+	Write-Output "Installing Atom Code Editor"
+	choco install atom -y
+}
+
+Function InstallBackupandSync {
+    Write-Output "Installing Backup and Sync"
+    choco install google-backup-and-sync -y
+}
+
+Function InstallBrave {
+    Write-Output "Installing Brave Browser"
+    choco install brave -y
+}
+
+Function InstallChrome {
+    Write-Output "Installing Google Chrome"
+    choco install googlechrome -y
+}
+
+Function InstallChromium {
+    Write-Output "Installing Chromium (Nice)"
+    choco install chromium -y
+}
+
+Function InstallDiscord {
+    Write-Output "Installing Discord"
+    choco install discord -y
+}
+
+Function InstallnewEdge {
+    Write-Output "Installing New Microsoft Edge"
+    choco install microsoft-edge -y
+}
+
+Function InstallEverythingSearch {
+    Write-Output "Installing Everything Search"
+    choco install everything -y
+}
+
+Function InstallFigma{
+    Write-Output "Installing Figma"
+    choco install figma -y
+}
+
+Function InstallFirefox {
+    Write-Output "Installing Firefox"
+    choco install firefox -y
+}
+
+Function InstallGit {
+    Write-Output "Installing Git"
+    choco install git -y
+}
+
+Function InstallGithub {
+    Write-Output "Installing Github Client"
+    choco install github-desktop -y
+}
+
+Function InstallImageglass {
+	Write-Output "Install Imageglass"
+	choco install imageglass -y
+}
+
+Function InstallLibreOffice {
+	Write-Output "INstalling Libre Office Fresh"
+	choco install libreoffice-fresh -y
 }
 
 Function InstallMediaPlayerClassic {
 	Write-Output "Installing Media Player Classic (VLC Alternative)"
 	choco install mpc-hc -y
 }
+
+Function InstallMicrosoftOffice {
+    Write-Output "Installing Office (Only Excel, Powerpoint, Word)"
+    choco install microsoft-office-deployment --params="'/64bit /Product:O365ProPlusRetail /Exclude:Publisher, OneDrive, Outlook, OneNote, Lync, Groove, Access'" -y
+}
+
+Function InstallNotepadplusplus {
+	Write-Output "Installing Notepad++"
+	choco install notepadplusplus -y
+}
+
+Function InstallOBS {
+    Write-Output "Installing OBS Studio"
+    choco install obs-studio -y
+}
+
+Function InstallPowerToys {
+	Write-Output "Installing PowerToys"
+	choco install powertoys -y
+}
+
+Function InstallSlack {
+	Write-Output "Installing Slack"
+	choco install slack -y
+}
+
+Function InstallSpotify {
+    Write-Output "Installing Spotify"
+    choco install spotify -y
+}
+
+Function InstallSteam {
+    Write-Output "Installing Steam"
+    choco install steam -y
+}
+
+Function InstallTelegram {
+    Write-Output "Installing Telegram"
+    choco install telegram.install -y
+}
+
+Function InstallVivaldi {
+    Write-Output "Installing Vivaldi"
+    choco install vivaldi -y
+}
+
+Function InstallVLCPlayer {
+    Write-Output "Installing VLC Media Player"
+    choco install vlc -y
+}
+
+Function InstallVSCode {
+    Write-Output "Installing VS Code"
+    choco install vscode.install -y
+    Write-Output "Installing Live Share Exention"
+    choco install vscode-vsliveshare -y
+}
+
+Function InstallWhatsapp {
+    Write-Output "Installing Whatsapp Desktop"
+    choco install whatsapp -y
+}
+
+Function InstallWinRAR {
+	Write-Output "Installing WinRAR"
+	choco install winrar -y
+}
+
+Function InstallZoom {
+    Write-Output "Installing Zoom Meeting"
+    choco install zoom -y
+}
+
 
 ##########
 # Privacy Tweaks
@@ -2464,7 +2657,7 @@ Function Restart {
 }
 
 ###########
-# Titus Additions
+# Additions
 ###########
 
 Function EnableDarkMode {
