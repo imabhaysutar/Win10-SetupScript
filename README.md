@@ -9,11 +9,14 @@ This is the Ultimate Windows 10 Script from a creation from multiple debloat scr
 - O&O Shutup10 CFG and Run
 - Added Install Programs
 - Added Debloat Microsoft Store Apps
+- Added Office and other apps
+- Added Bit check.
 
 ## Modifications
 I encourage people to fork this project and comment out things they don't like! Here is a list of normal things people change:
 - Uninstalling OneDrive (This is on in my script)
-- Installing Adobe, Chocolatey, Notepad++, MPC-HC, and 7-Zip
+- Installing Chocolatey, 7Zip, BackupandSync, Figma, Microsoft Office (Only select apps), Spotify, Telegram, VLCPlayer, VS Code and lot more, I highly recommend that you go through the entire list and select the once you want.
+
 
 Comment any thing you don't want out... Example:
 
